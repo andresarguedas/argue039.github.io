@@ -1,0 +1,130 @@
+---
+title: "Resume"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+bibliography: publications.bib
+nocite: |
+  @pnkp
+---
+
+---
+
+You can also view my resume <a href="./documents/CV-Andres-Arguedas.pdf" download> here </a>.
+
+---
+
+# Education
+
+## University of Minnesota
+
+### MS in Biostatistics
+
+#### September 2020 - Present
+
++ **GPA** 4.0/4.0
++ **2020-2021 John E. Connett First Year Student Achievement Award:** awarded for top performance in the First Year Exam in the MS program 
++ **SPH's Dean's Scholars Award:** awarded for excellent academic record and belief in potential to excel in further graduate studies in Biostatistics
+
+## University of Costa Rica
+
+### Bachelor's degree in statistics
+
+#### February 2014 - December 2017
+
++ Honors graduation with a GPA of 9.07/10
++ 2<sup>nd</sup> best GPA of the bachelor's degree in statistics in 2015
++ **Academic Excellence Scholarship:** awarded for having a GPA greater than 9.0/10 throughout my undergraduate studies
++ Winner of a contest to attend the "ASA Symposium on Statistical Inference" in 2017
+
+---
+
+# Skills
+
+## Programming
+
+### Programming languages
+
++ R
++ $\LaTeX$
++ Python
++ SQL
++ C++
+
+### Software knowledge
+
++ SAS
++ SPSS
++ Excel
++ CSPro
++ QGIS
++ PostgreSQL
+
+---
+
+# Experience
+
+## University of Minnesota
+
+### Division of Biostatistics
+
+#### Research Assistant | July 2021 - January 2022
+
+Worked under Dr. Lynn Eberly and Dr. Sandra Safo of the Division of Biostatistics, as part of an ongoing multi-site interdisciplinary national investigation into long-term neuropsychological effects of COVID-19. My duties in the team consisted of creating quality control checks for the data entered by the different sites, and procedures for sending reports to sites and integrating them back.
+
+#### Teaching Assistant | August 2021 - December 2021
+
+Graduate teaching assistant for "PubH 6450: Biostatistics I" under Professor Marta Shore. My duties included hosting office hours, grading reports and quizzes, instructing an in-person computer lab once per week, as well as collaborating, and helping answer questions, during group discussions in class.
+
+## University of Costa Rica
+
+### School of Statistics
+
+#### Lecturer | August 2018 - December 2020
+
+Supervised by MSc. Fernando Ramírez Hernández, director of the School of Statistics, and Dr. Marcela Alfaro Córdoba, assistant professor at the School of Statistics. Worked as lecturer for the following undergraduate courses:
+
++ XS-0235: Fundamentals of Biostatistics - I Semester 2020
++ XS-0300: Statistics for Biology I - II Semester 2018, 2019, 2020
++ XS-0301: Statistics for Biology II - I Semester 2019, 2020
++ XS-1110: Introductory Statistics I - I Semester 2019, 2020
++ XS-2330: Continuous Probabilistic Models - II Semester 2018, 2019, 2020
++ XS-3310: Statistical Theory - III Semester 2018
+
+### Central American Population Center (CCP)
+
+#### Research Assistant | March 2018 - December 2018
+
+Under the supervision of Dr. Arodys Robles Soto, worked on the analysis of data based on the Sexual and Reproductive Health Surveys of Costa Rica from 1976 to 2015 with the objective of tracking the evolution of sterilization in the country's women, through survival analysis using pseudocohorts, and the analysis of the incidence of unwanted pregnancies and sociodemographical variables that might affect this phenomenon.
+
+### Others
+
+#### Professional Internship | February 2017 - December 2017
+
+As part of the professional internship required for the bachelor's degree, collaborated in two research projects under the supervision of a faculty member in the School of Statistics. My tasks included text mining, and processing of non-structured data in one project, as well as building a database from non-structured data and analyzing it in the other project.
+
+#### Teaching Assistant | August 2016 - July 2018
+
+Undergraduate teaching assistant for the courses "XS-2310: Discrete Probabilistic Models," "XS-2330: Continuous Probabilistic Models," and "XS-3310: Statistical Theory" for second and third year students of the Bachelor's Degree in Statistics. Duties included: hosting office hours, grading homeworks and quizzes, and supporting the professor in teaching during some classes.
+
+---
+
+# Conferences and Congresses
+
+## 2019 Joint Statistical Meetings | Speed poster
+
+### July 28 - August 1, 2019 | Denver, Colorado, United States
+
+Presented a speed poster, titled "Determining the Distance Between Countries of Latin America and the Caribbean Regarding Their Fulfillment of the SDGs in 2017," in which data from the World Bank and United Nations was used to determine strengths and weaknesses in the statistical systems of the countries in the region, with the purpose of strengthening the situation regarding the elaboration of the Sustainable Development Goals.
+
+## XXXI International Forum on Statistics (FIE) | Poster
+
+### October 2016 | Texcoco, Mexico
+
+Presented a poster, as part of a group from the School of Statistics of the University of Costa Rica, during the thirty first International Forum in Statistics (FIE), organized by the Mexican Association of Statistics, covering a simulation project done as part of a course on experimental design. The title of the project was "The effect of using an incomplete and unbalanced block design on the power of the tests."
+
+---
+
+# Publications

@@ -1,4 +1,4 @@
-name: "Yay internet!"
+name: "Andrés Arguedas"
 header-includes: 
   \usepackage{graphicx}
   \usepackage{float}
@@ -9,9 +9,23 @@ navbar:
     - text: "About"
       href: about.html
     - icon: fa-envelope fa-lg
-      href: mailto:<nevil066@umn.edu>
+      href: mailto:<argue039@umn.edu>
     - icon: fa-github fa-lg
-      href: http://github.com/nevilleq/
+      href: http://github.com/andresarguedas/
+    - icon: fa-linkedin fa-lg
+      href: https://www.linkedin.com
+    - text: Professional Documents
+      menu:
+        - text: Resume
+          href: resume.html
+    - text: Recent Work
+      menu:
+        - text: Flexdashboard
+          href: flexdashboard.html
+    - icon: fa-basketball-ball fa-bounce
+      href: bracket_2022.html
 output:  
    html_document:
-    theme: flatly
+    theme: cosmo
+    includes:
+      in_header: header.html

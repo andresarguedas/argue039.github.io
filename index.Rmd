@@ -1,0 +1,14 @@
+---
+title: "Andrés Arguedas"
+---
+
+```{r, echo = F}
+htmltools::includeHTML(path = "flip_pic.html")
+```
+
+<font size = "4"> 
+I am a current second year student in the Biostatistics MS program at the University of Minnesota, from which I plan to graduate on May 2022. Previously I obtained my Bachelor's Degree in Statistics from the University of Costa Rica in 2020. 
+
+My main interests in statistics lie in the areas of machine learning/prediction, causal inference, with a bit of survival analysis. I also like to find innovative ways of creating engaging visualizations for communicating results based on data and analyses.
+</font> 
+

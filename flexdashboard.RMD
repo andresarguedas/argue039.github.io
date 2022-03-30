@@ -1,0 +1,367 @@
+---
+title: "COVID-19 global cases and deaths dashboard"
+author: "Andrés Arguedas"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+---
+
+```{r setup, include = FALSE, echo = FALSE}
+# Load the required packages for this script
+library(tidyverse) # for data carpentry and plotting
+library(gt) # for creating tables
+library(lubridate) # for working with dates
+library(scales) # for adjusting values of scales in ggplot
+library(plotly) # for interactive plotting
+library(flexdashboard)
+library(countrycode)
+
+# Set system locale to English for use with days of week and months
+Sys.setenv("LANGUAGE" = "En")
+Sys.setlocale("LC_ALL", "English")
+
+# Working directory for .RMD, figure output in Markdown, and messages/warnings
+# output
+knitr::opts_knit$set(
+  echo = TRUE,
+  root.dir = rprojroot::find_rstudio_root_file(),
+  fig.width = 6,
+  out.width = "70%",
+  fig.align = "center",
+  cache = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+
+# Set theme for ggplot2 to `theme_bw()`, as well as centering the title and
+# putting the legend at bottom by default
+theme_set(theme_bw())
+theme_update(
+  plot.title = element_text(hjust = 0.5, face = "bold"),
+  legend.position = "bottom"
+)
+
+# Set the color palette of ggplot to a colorblind friendly one (Okabe-Ito)
+options(
+  ggplot2.discrete.colour = c(
+    "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#000000"
+  ), ggplot2.discrete.fill = c(
+    "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#000000"
+  )
+)
+
+# Set scientific notation output and decimal places for knitr
+# options(scipen = 999)
+# options(digits = 4)
+```
+
+
+```{r data_read, include = FALSE}
+# Obtain a list of all files in the `data` directory
+file_list <- list.files("./data/")
+
+# Since there is a file with aggregates, and we're only interested in the
+# individual reports per continent, we need to drop the file which has
+# aggregates
+file_list <- file_list[!str_detect(file_list, "aggregate")]
+
+# Now, we proceed to load and tidy the data iteratively by first creating a
+# tibble where we will store the files and corresponding metadata
+covid19_cases <- tibble(
+  # Specify the directory where the data is stored
+  file_dir = "./data/",
+  # Set the list of files that we want to load, obtained above
+  file_list = file_list,
+  # Extract the continent corresponding to the specific data from the name of
+  # the file. Specifically, since the file names are of the format
+  # `covid19_name_of_the_continent.csv`, then we can extract the name of the
+  # continent by taking everything after the first underscore, which is what the
+  # regex does, and then delete the ".csv" at the end
+  continent = str_extract(file_list, "(?<=_).*") %>%
+    str_replace(".csv", ""),
+  # Combine both the file directory and name to get the full file path for all
+  # desired files
+  file_paths = str_c(file_dir, file_list)
+) %>%
+  # Now, we can load the data iteratively from each file by using the `map()`
+  # function to read every file in the file list, and save it as a column in our
+  # tibble
+  mutate(data = map(
+    # The column to be used contains the file paths for the data
+    .x = file_paths,
+    # Load each file iteratively using the `read_csv()` function, and don't
+    # return the column specs for ease of reading
+    .f = ~ read_csv(.x, show_col_types = F)
+  )) %>%
+  # Since we already have the data loaded, as well as its corresponding
+  # metadata, we don't need anything related to the file paths or names from on,
+  # so we can drop them
+  dplyr::select(!contains(c("file"))) %>%
+  # To actually get the dataset with the appropriate columns, we just need to
+  # unnest the data
+  unnest(cols = data) %>%
+  # Although there are NA's for multiple columns, the only ones that we will
+  # change are the ones related to either new cases or deaths, since these
+  # represent periods in which no new cases or deaths were reported, and thus
+  # the corresponding values will be 0. For all other variables with an NA this
+  # actually represents that the data was not collected, not that it doesn't
+  # exist, so the records will be kept, but their value won't be changed.
+  mutate(across(
+    # Choose only variable which start with `new`, in other words, those that
+    # are related to COVID cases or deaths
+    .cols = starts_with("new"),
+    # If the value is NA change it to 0, otherwise leave it as is
+    .fns = ~ ifelse(is.na(.x), 0, .x)
+  ),
+  # Next, since the `date` variable was automatically detected as a date when
+  # reading the data, then we don't need to modify it further and we can just
+  # obtain the month and day of the week for every date using the `month()` and
+  # `wday()` functions, respectively
+  month = month(date,
+    # `label=TRUE` to return name of the month instead of a number
+    label = TRUE
+  ),
+  dow = wday(date,
+    # `label=TRUE` to return name of the day instead of a number
+    label = TRUE,
+    # specify Monday as the first day of the week for plotting purposes
+    week_start = getOption("lubridate.week.start", 1)
+  )
+  ) %>%
+  # For ease of use, we will rename the variable with the name of the country
+  # from `location` to `country`
+  rename(country = location) %>%
+  # Now, since we want to obtain the cumulative cases and deaths for each
+  # country, by day, then we need to nest the data according to the country, so
+  # that we can work with the data for each country independently
+  nest(data = -country) %>%
+  # Having nested the data by country, we can just calculate the cumulative
+  # cases and deaths by using the `cumsum()` function with the appropriate
+  # variable, and mapping this function over the data set for each country
+  mutate(
+    # Since we only want to add a new variable to the data, we can just rewrite
+    # the `data` column for each country
+    data = map(
+      # Pick the list column containing the data for each country
+      .x = data,
+      # Create a new variable in the data
+      .f = ~ .x %>% mutate(
+        # Use an `across()` to not have to write the same function two times for
+        # cases and deaths separately
+        across(
+          # Choose only the columns which include "new", but not "smoothed", in
+          # other words just new cases and deaths, without the smoothed
+          # estimates
+          .cols = starts_with("new") & !ends_with("smoothed"),
+          # Apply the cumulative sum to cases and deaths
+          .fns = list(cum = cumsum),
+          # Name the new variables by first adding the name of the function and
+          # then the original name of the variable, for ease of use
+          .names = "{.fn}_{.col}"
+        )
+      )
+    )
+  ) %>%
+  # To get a usable data set once again we unnest the tibble so that each row
+  # represents the information for one country, at a specific date
+  unnest(cols = c(data)) %>%
+  # Finally, for ease of use we will rename the newly made variables
+  rename_with(
+    # Pick only the variables which include "cum_new" in their name
+    .cols = contains("cum_new"),
+    # Replace "cum_new" with just "cum"
+    .fn = ~ str_replace(.x, "cum_new", "cum")
+  )
+```
+
+Row
+-----------------------------------------------------------------------
+
+### Total daily global COVID-19 cases or deaths
+
+```{r global-totals-plot, echo = F}
+covid19_cases %>%
+  # Group the observations by date
+  group_by(date) %>%
+  # Obtain the total number of cases and deaths for each date, as well as the
+  # corresponding total rolling-average
+  summarise(across(.cols = starts_with("new"), .fns = sum)) %>%
+  # Rename the variables we just created
+  rename_with(.cols = -date, .fn = ~ str_replace(.x, "new_", "")) %>%
+  rename(cases_total = cases, deaths_total = deaths) %>%
+  # Create a plotly with bars and lines for both cases and deaths
+  plot_ly(
+    x = ~date, y = ~cases_total, type = "bar", name = "Cases",
+    color = I("#FA9FB5")
+  ) %>%
+  add_lines(
+    y = ~cases_smoothed, name = "Smoothed",
+    color = I("black")
+  ) %>%
+  add_bars(
+    y = ~deaths_total, name = "Deaths", visible = F,
+    color = I("#FA9FB5")
+  ) %>%
+  add_lines(
+    y = ~deaths_smoothed, name = "Smoothed", visible = F,
+    color = I("black")
+  ) %>%
+  # Add a button to change from cases to deaths, as well as changing names of
+  # titles and axes
+  layout(
+    title = "Total COVID cases/deaths per day",
+    xaxis = list(
+      title = "Date",
+      rangeslider = list(visible = T),
+      rangeselector = list(
+        buttons = list(
+          list(count = 1, label = "1m", step = "month", stepmode = "backward"),
+          list(count = 6, label = "6m", step = "month", stepmode = "backward"),
+          list(count = 1, label = "YTD", step = "year", stepmode = "todate"),
+          list(count = 1, label = "1y", step = "year", stepmode = "backward"),
+          list(step = "all")
+        )
+      )
+    ),
+    yaxis = list(title = "Total"),
+    hovermode = "x unified",
+    updatemenus = list(
+      list(
+        x = 1.2,
+        y = 0.5,
+        buttons = list(
+          list(
+            method = "restyle",
+            args = list("visible", list(TRUE, TRUE, FALSE, FALSE)),
+            label = "Cases"
+          ),
+          list(
+            method = "restyle",
+            args = list("visible", list(FALSE, FALSE, TRUE, TRUE)),
+            label = "Deaths"
+          )
+        )
+      )
+    )
+  )
+```
+
+Row {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Total COVID-19 cases or deaths, per country
+
+```{r totals-per-country-map, echo = F}
+# give country boundaries a black border
+l <- list(color = toRGB("black"))
+
+# specify map projection/options
+g <- list(
+  landcolor = "lightgray",
+  showland = TRUE,
+  showframe = FALSE,
+  showcoastlines = FALSE,
+  showcountries = TRUE,
+  countrycolor = "gray",
+  projection = list(type = "Mercator")
+)
+
+# Create a map with total cases/deaths per country
+covid19_cases %>%
+  # Change a couple of country's name for ease of use
+  mutate(
+    country = str_replace_all(country, "Timor", "East Timor"),
+    country = str_replace_all(
+      country, "\\(country\\)",
+      "(Federated States of)"
+    ),
+    country_iso = countrycode(country,
+      origin = "country.name.en",
+      destination = "iso3c"
+    )
+  ) %>%
+  # Take only the last observation
+  group_by(country) %>%
+  slice_tail() %>%
+  ungroup() %>%
+  # Create the map in plotly
+  plot_ly(
+    type = "choropleth", locations = ~country_iso, z = ~cum_cases,
+    text = ~country, colors = "YlOrRd", marker = list(line = l),
+    name = "Cases", hovertemplate = "%{text}\nTotal Cases: %{z}"
+  ) %>%
+  add_trace(
+    type = "choropleth", z = ~cum_deaths, visible = F,
+    name = "Deaths", hovertemplate = "%{text}\nTotal Deaths: %{z}"
+  ) %>%
+  # FYI: This add the appropriate title to the legend
+  colorbar(title = "Total Cases", x = 1.02, y = 0.75) %>%
+  colorbar(title = "Total Deaths", x = 1.02, y = 0.75, which = 2) %>%
+  layout(
+    title = "Total cases/deaths from COVID-19, per country",
+    geo = g,
+    updatemenus = list(
+      list(
+        x = 1.2,
+        y = 1.02,
+        buttons = list(
+          list(
+            method = "restyle",
+            args = list("visible", list(TRUE, FALSE)),
+            label = "Cases"
+          ),
+          list(
+            method = "restyle",
+            args = list("visible", list(FALSE, TRUE)),
+            label = "Deaths"
+          )
+        )
+      )
+    )
+  )
+```
+
+### Daily smoothed COVID-19 cases per country, since February 2020
+
+```{r daily-cases-per-country-map, echo = F}
+# Create an animated plotly of daily average cases per country since Feb 2020
+covid19_cases %>%
+  # Change country's names for ease of use
+  mutate(
+    country = str_replace_all(country, "Timor", "East Timor"),
+    country = str_replace_all(
+      country, "\\(country\\)",
+      "(Federated States of)"
+    ),
+    country_iso = countrycode(country,
+      origin = "country.name.en",
+      destination = "iso3c"
+    )
+  ) %>%
+  # Choose dates only after Feb 2020 since most cases started after this date
+  filter(date >= "2020-02-01") %>%
+  # Change the date to a factor, since the animation doesn't work with dates
+  mutate(
+    date_fac = factor(date)
+  ) %>%
+  rename(Cases = new_cases_smoothed) %>%
+  # Create the animated map
+  plot_ly(
+    type = "choropleth", locations = ~country_iso, z = ~Cases,
+    frame = ~date_fac, text = ~country, colors = c(
+      "#FFF7F3", "#FDE0DD", "#FCC5C0", "#FA9FB5", "#F768A1", "#DD3497",
+      "#AE017E", "#7A0177", "#49006A"
+    ), marker = list(line = l)
+  ) %>%
+  layout(
+    title = "10-day rolling average of COVID-19 cases, per country, since Feb. 2020",
+    geo = g
+  ) %>%
+  animation_opts(frame = 5) %>%
+  animation_slider(
+    currentvalue = list(prefix = "Date: ")
+  )
+```

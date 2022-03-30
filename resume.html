@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Resume</title>
+
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Raleway">
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+<link rel="icon" type="image/png" href="images/favicon/favicon.ico"/>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+* {
+  box-sizing:border-box;
+}
+
+h1 {
+  margin: 0;
+  font-family: "Lato", sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: "Raleway", sans-serif;
+}
+
+.column {
+  float: left;
+  width: 50%;
+  padding: 50px;
+  text-align: center;
+  font-size: 25px;
+  cursor: pointer;
+  color: white;
+}
+
+.containerTab {
+  padding: 20px;
+  color: white;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Closable button inside the image */
+.closebtn {
+  float: right;
+  color: white;
+  font-size: 35px;
+  cursor: pointer;
+}
+
+.containerMod {
+  padding: 64px;
+}
+
+.column-66 {
+  float: left;
+  width: 66.66666%;
+  padding: 20px;
+}
+
+.column-33 {
+  float: left;
+  width: 33.33333%;
+  padding: 20px;
+  text-align: center;
+}
+
+.large-font {
+  font-size: 48px;
+}
+
+.xlarge-font {
+  font-size: 64px
+}
+
+@media screen and (max-width: 1000px) {
+  .column-66,
+  .column-33 {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.row-container {display: flex; width: 100%; height: 100%; flex-direction: column; overflow: hidden; min-height: 100vh;}
+
+.flex-row { flex-grow: 1; border: none; margin: 0; padding: 0; }
+
+/* The flip card container - set the width and height to whatever you want. We have added the border property to demonstrate that the flip itself goes out of the box on hover (remove perspective if you don't want the 3D effect */
+.flip-card {
+  background-color: transparent;
+  border: 1px solid #f1f1f1;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+/* This container is needed to position the front and back side */
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+/* Do an horizontal flip when you move the mouse over the flip box container */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Position the front and back side */
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+/* Style the front side (fallback if image is missing) */
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+/* Style the back side */
+.flip-card-back {
+  background-color: dodgerblue;
+  color: white;
+  transform: rotateY(180deg);
+}
+</style>
+
+<script>
+  // Hide all elements with class="containerTab", except for the one that matches the clickable grid column
+function openTab(tabName) {
+  var i, x;
+  x = document.getElementsByClassName("containerTab");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  document.getElementById(tabName).style.display = "block";
+}
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="mailto:&lt;argue039@umn.edu&gt;">
+    <span class="fa fa-envelope fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="http://github.com/andresarguedas/">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://www.linkedin.com">
+    <span class="fa fa-linkedin fa-lg"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Professional Documents
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="resume.html">Resume</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Recent Work
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="flexdashboard.html">Flexdashboard</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="bracket_2022.html">
+    <span class="fa fa-basketball-ball fa-bounce"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Resume</h1>
+
+</div>
+
+
+<hr />
+<p>You can also view my resume <a href="./documents/CV-Andres-Arguedas.pdf" download> here </a>.</p>
+<hr />
+<div id="education" class="section level1">
+<h1>Education</h1>
+<div id="university-of-minnesota" class="section level2">
+<h2>University of Minnesota</h2>
+<div id="ms-in-biostatistics" class="section level3">
+<h3>MS in Biostatistics</h3>
+<div id="september-2020---present" class="section level4">
+<h4>September 2020 - Present</h4>
+<ul>
+<li><strong>GPA</strong> 4.0/4.0</li>
+<li><strong>2020-2021 John E. Connett First Year Student Achievement Award:</strong> awarded for top performance in the First Year Exam in the MS program</li>
+<li><strong>SPH’s Dean’s Scholars Award:</strong> awarded for excellent academic record and belief in potential to excel in further graduate studies in Biostatistics</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="university-of-costa-rica" class="section level2">
+<h2>University of Costa Rica</h2>
+<div id="bachelors-degree-in-statistics" class="section level3">
+<h3>Bachelor’s degree in statistics</h3>
+<div id="february-2014---december-2017" class="section level4">
+<h4>February 2014 - December 2017</h4>
+<ul>
+<li>Honors graduation with a GPA of 9.07/10</li>
+<li>2<sup>nd</sup> best GPA of the bachelor’s degree in statistics in 2015</li>
+<li><strong>Academic Excellence Scholarship:</strong> awarded for having a GPA greater than 9.0/10 throughout my undergraduate studies</li>
+<li>Winner of a contest to attend the “ASA Symposium on Statistical Inference” in 2017</li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+</div>
+<div id="skills" class="section level1">
+<h1>Skills</h1>
+<div id="programming" class="section level2">
+<h2>Programming</h2>
+<div id="programming-languages" class="section level3">
+<h3>Programming languages</h3>
+<ul>
+<li>R</li>
+<li><span class="math inline">\(\LaTeX\)</span></li>
+<li>Python</li>
+<li>SQL</li>
+<li>C++</li>
+</ul>
+</div>
+<div id="software-knowledge" class="section level3">
+<h3>Software knowledge</h3>
+<ul>
+<li>SAS</li>
+<li>SPSS</li>
+<li>Excel</li>
+<li>CSPro</li>
+<li>QGIS</li>
+<li>PostgreSQL</li>
+</ul>
+<hr />
+</div>
+</div>
+</div>
+<div id="experience" class="section level1">
+<h1>Experience</h1>
+<div id="university-of-minnesota-1" class="section level2">
+<h2>University of Minnesota</h2>
+<div id="division-of-biostatistics" class="section level3">
+<h3>Division of Biostatistics</h3>
+<div id="research-assistant-july-2021---january-2022" class="section level4">
+<h4>Research Assistant | July 2021 - January 2022</h4>
+<p>Worked under Dr. Lynn Eberly and Dr. Sandra Safo of the Division of Biostatistics, as part of an ongoing multi-site interdisciplinary national investigation into long-term neuropsychological effects of COVID-19. My duties in the team consisted of creating quality control checks for the data entered by the different sites, and procedures for sending reports to sites and integrating them back.</p>
+</div>
+<div id="teaching-assistant-august-2021---december-2021" class="section level4">
+<h4>Teaching Assistant | August 2021 - December 2021</h4>
+<p>Graduate teaching assistant for “PubH 6450: Biostatistics I” under Professor Marta Shore. My duties included hosting office hours, grading reports and quizzes, instructing an in-person computer lab once per week, as well as collaborating, and helping answer questions, during group discussions in class.</p>
+</div>
+</div>
+</div>
+<div id="university-of-costa-rica-1" class="section level2">
+<h2>University of Costa Rica</h2>
+<div id="school-of-statistics" class="section level3">
+<h3>School of Statistics</h3>
+<div id="lecturer-august-2018---december-2020" class="section level4">
+<h4>Lecturer | August 2018 - December 2020</h4>
+<p>Supervised by MSc. Fernando Ramírez Hernández, director of the School of Statistics, and Dr. Marcela Alfaro Córdoba, assistant professor at the School of Statistics. Worked as lecturer for the following undergraduate courses:</p>
+<ul>
+<li>XS-0235: Fundamentals of Biostatistics - I Semester 2020</li>
+<li>XS-0300: Statistics for Biology I - II Semester 2018, 2019, 2020</li>
+<li>XS-0301: Statistics for Biology II - I Semester 2019, 2020</li>
+<li>XS-1110: Introductory Statistics I - I Semester 2019, 2020</li>
+<li>XS-2330: Continuous Probabilistic Models - II Semester 2018, 2019, 2020</li>
+<li>XS-3310: Statistical Theory - III Semester 2018</li>
+</ul>
+</div>
+</div>
+<div id="central-american-population-center-ccp" class="section level3">
+<h3>Central American Population Center (CCP)</h3>
+<div id="research-assistant-march-2018---december-2018" class="section level4">
+<h4>Research Assistant | March 2018 - December 2018</h4>
+<p>Under the supervision of Dr. Arodys Robles Soto, worked on the analysis of data based on the Sexual and Reproductive Health Surveys of Costa Rica from 1976 to 2015 with the objective of tracking the evolution of sterilization in the country’s women, through survival analysis using pseudocohorts, and the analysis of the incidence of unwanted pregnancies and sociodemographical variables that might affect this phenomenon.</p>
+</div>
+</div>
+<div id="others" class="section level3">
+<h3>Others</h3>
+<div id="professional-internship-february-2017---december-2017" class="section level4">
+<h4>Professional Internship | February 2017 - December 2017</h4>
+<p>As part of the professional internship required for the bachelor’s degree, collaborated in two research projects under the supervision of a faculty member in the School of Statistics. My tasks included text mining, and processing of non-structured data in one project, as well as building a database from non-structured data and analyzing it in the other project.</p>
+</div>
+<div id="teaching-assistant-august-2016---july-2018" class="section level4">
+<h4>Teaching Assistant | August 2016 - July 2018</h4>
+<p>Undergraduate teaching assistant for the courses “XS-2310: Discrete Probabilistic Models,” “XS-2330: Continuous Probabilistic Models,” and “XS-3310: Statistical Theory” for second and third year students of the Bachelor’s Degree in Statistics. Duties included: hosting office hours, grading homeworks and quizzes, and supporting the professor in teaching during some classes.</p>
+<hr />
+</div>
+</div>
+</div>
+</div>
+<div id="conferences-and-congresses" class="section level1">
+<h1>Conferences and Congresses</h1>
+<div id="joint-statistical-meetings-speed-poster" class="section level2">
+<h2>2019 Joint Statistical Meetings | Speed poster</h2>
+<div id="july-28---august-1-2019-denver-colorado-united-states" class="section level3">
+<h3>July 28 - August 1, 2019 | Denver, Colorado, United States</h3>
+<p>Presented a speed poster, titled “Determining the Distance Between Countries of Latin America and the Caribbean Regarding Their Fulfillment of the SDGs in 2017,” in which data from the World Bank and United Nations was used to determine strengths and weaknesses in the statistical systems of the countries in the region, with the purpose of strengthening the situation regarding the elaboration of the Sustainable Development Goals.</p>
+</div>
+</div>
+<div id="xxxi-international-forum-on-statistics-fie-poster" class="section level2">
+<h2>XXXI International Forum on Statistics (FIE) | Poster</h2>
+<div id="october-2016-texcoco-mexico" class="section level3">
+<h3>October 2016 | Texcoco, Mexico</h3>
+<p>Presented a poster, as part of a group from the School of Statistics of the University of Costa Rica, during the thirty first International Forum in Statistics (FIE), organized by the Mexican Association of Statistics, covering a simulation project done as part of a course on experimental design. The title of the project was “The effect of using an incomplete and unbalanced block design on the power of the tests.”</p>
+<hr />
+</div>
+</div>
+</div>
+<div id="publications" class="section level1 unnumbered">
+<h1 class="unnumbered">Publications</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-pnkp" class="csl-entry">
+Bermúdez-Guzmán, Luis, Gabriel Jimenez-Huezo, Andrés Arguedas, and Alejandro Leal. 2020. <span>“Mutational Survivorship Bias: The Case of PNKP.”</span> <em>PLOS ONE</em> 15 (12). <a href="https://doi.org/10.1371/journal.pone.0237682">https://doi.org/10.1371/journal.pone.0237682</a>.
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

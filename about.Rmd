@@ -1,0 +1,9 @@
+---
+title: "About"
+---
+
+<font size="4"> 
+<center>
+The tabs at the top of this website provide links to my email and GitHub, as well as my resume, some recent work (and my March Madness Bracket for this year!). Feel free to email me with any inquiries or opportunities you would like to share.  
+</center>
+</font>
