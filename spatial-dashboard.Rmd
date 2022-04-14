@@ -1,7 +1,9 @@
 ---
 title: "MN Spatial Dashboard"
 author: "Andrés Arguedas"
-output: flexdashboard::flex_dashboard
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
 vertical_layout: scroll
 ---
   
@@ -83,7 +85,10 @@ mn_base.map <- get_map(
 
 # Create the base map
 mn_base.gg <- ggmap(mn_base.map) +
-  geom_polygon(data = mn.outline, aes(x = longitude, y = latitude), colour = "black", size = 1.6, alpha = 0.1) +
+  geom_polygon(
+    data = mn.outline, aes(x = longitude, y = latitude),
+    colour = "black", size = 1.6, alpha = 0.1
+  ) +
   theme_map() +
   theme(
     plot.title = element_text(
@@ -95,16 +100,16 @@ mn_base.gg <- ggmap(mn_base.map) +
     legend.position = "right"
   )
 ```
-
-Column
------------------------------------------------------------------------
   
 ### Various event and entertainment venue locations in MN
   
 ```{r amenities-map-MN, echo = F}
 # Load the "amenity" key, taking only the required places
 osm_amenity_sf.df <- opq(bbox = "minnesota", timeout = 60) %>%
-  add_osm_feature(key = "amenity", value = c("cinema", "casino", "theatre", "events_venue")) %>%
+  add_osm_feature(key = "amenity", value = c(
+    "cinema", "casino", "theatre",
+    "events_venue"
+  )) %>%
   osmdata_sf()
 
 # Extract the points
@@ -114,7 +119,8 @@ amenity_points.df <- osm_amenity_sf.df$osm_points %>%
     !is.na(amenity),
     amenity %in% c("cinema", "casino", "theatre", "events_venue")
   ) %>% # only retain 'valid' tags
-  mutate(amenity = str_replace_all(amenity, "_", " ") %>% str_to_title() %>% as_factor()) %>%
+  mutate(amenity = str_replace_all(amenity, "_", " ") %>%
+    str_to_title() %>% as_factor()) %>%
   st_intersection(osmdata::getbb("minnesota", format_out = "sf_polygon"), .)
 
 # Extract the levels/order of amenity type
@@ -144,16 +150,21 @@ amenity_label.df <- amenity_points.df %>%
 
 # Specify the specific icon for each place accordingly
 icons <- awesomeIcons(
-  icon = amenity_label.df %>% st_drop_geometry() %>% dplyr::select(icon) %>% pull(),
+  icon = amenity_label.df %>% st_drop_geometry() %>%
+    dplyr::select(icon) %>% pull(),
   iconColor = "black",
   library = "fa",
-  markerColor = amenity_label.df %>% st_drop_geometry() %>% dplyr::select(color) %>% pull()
+  markerColor = amenity_label.df %>% st_drop_geometry() %>%
+    dplyr::select(color) %>% pull()
 )
 
 # Create the leaflet
 leaflet(data = amenity_label.df) %>%
   addProviderTiles("CartoDB.Positron") %>%
-  addAwesomeMarkers(popup = ~ map(text_label, HTML), label = ~ map(text_label, HTML), icon = icons) %>%
+  addAwesomeMarkers(
+    popup = ~ map(text_label, HTML),
+    label = ~ map(text_label, HTML), icon = icons
+  ) %>%
   addLegend(
     title    = "Venue Type",
     position = "bottomright",
@@ -161,9 +172,6 @@ leaflet(data = amenity_label.df) %>%
     labels   = amenity_types
   )
 ```
-
-Column
------------------------------------------------------------------------
   
 ### Public transport use by tract in Hennepin county
   
@@ -185,7 +193,10 @@ hennepin_base.map <- get_map(
 
 # Create the base map
 hennepin_base.gg <- ggmap(hennepin_base.map) +
-  geom_polygon(data = hennepin.outline, aes(x = longitude, y = latitude), colour = "black", size = 1.6, alpha = 0.1) +
+  geom_polygon(
+    data = hennepin.outline, aes(x = longitude, y = latitude),
+    colour = "black", size = 1.6, alpha = 0.1
+  ) +
   theme_map() +
   theme(
     plot.title = element_text(
@@ -267,9 +278,8 @@ mn_pub_trans.ggmap <- hennepin_base.gg +
     colour = "black", size = 1.2, alpha = 0.6,
     inherit.aes = FALSE
   ) +
-  labs(title = "Percent of Population that uses Public Transport to go to 
-       Work, Hennepin County, MN 2019 ACS ") +
-  scale_fill_distiller("% use",
+  labs(title = "Percent of Population that uses Public Transport to go to Work, Hennepin County, MN 2019 ACS ") +
+  scale_fill_distiller("% use public transport",
     labels = scales::percent,
     type = "seq", palette = "OrRd", direction = 1
   ) +
@@ -287,9 +297,7 @@ mn_pub_trans.ggmap <- hennepin_base.gg +
 # Create plotly
 mn_pub_trans.ggplotly <-
   ggplotly(mn_pub_trans.ggmap,
-    tooltip = "text",
-    height  = 600,
-    width   = 800
+    tooltip = "text"
   ) %>%
   style(hoveron = "fills")
 
@@ -305,9 +313,6 @@ for (i in 1:length(index)) {
 # Display
 mn_pub_trans.ggplotly
 ```
-
-Column
------------------------------------------------------------------------
 
 ### Sports venues in Minnesota
 
