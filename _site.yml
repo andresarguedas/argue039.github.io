@@ -22,6 +22,8 @@ navbar:
       menu:
         - text: Flexdashboard
           href: flexdashboard.html
+        - text: "Spatial Dashboard"
+          href: spatial-dashboard.html
     - icon: fa-basketball-ball fa-bounce
       href: bracket_2022.html
 output:  

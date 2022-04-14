@@ -61,7 +61,7 @@ options(
 
 ```{r data_read, include = FALSE}
 # Obtain a list of all files in the `data` directory
-file_list <- list.files("./data/")
+file_list <- list.files("./data/", "covid19")
 
 # Since there is a file with aggregates, and we're only interested in the
 # individual reports per continent, we need to drop the file which has

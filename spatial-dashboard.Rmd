@@ -1,0 +1,354 @@
+---
+title: "MN Spatial Dashboard"
+author: "Andrés Arguedas"
+output: flexdashboard::flex_dashboard
+vertical_layout: scroll
+---
+  
+```{r setup, include = FALSE, echo = FALSE}
+# Load the required packages for this script
+library(tidyverse)
+library(ggridges)
+library(plotly)
+library(sf)
+library(ggmap)
+library(tidycensus)
+library(leaflet)
+library(osmdata)
+library(tigris)
+library(ggsflabel)
+library(ggthemes)
+library(htmltools)
+
+# Set system locale to English for use with days of week and months
+Sys.setenv("LANGUAGE" = "En")
+Sys.setlocale("LC_ALL", "English")
+
+# Working directory for .RMD, figure output in Markdown, and messages/warnings
+# output
+knitr::opts_knit$set(
+  echo = TRUE,
+  root.dir = rprojroot::find_rstudio_root_file(),
+  fig.width = 6,
+  out.width = "70%",
+  fig.align = "center",
+  cache = FALSE,
+  warning = FALSE,
+  message = FALSE
+)
+
+# Set theme for ggplot2 to `theme_bw()`, as well as centering the title and
+# putting the legend at bottom by default
+theme_set(theme_bw())
+theme_update(
+  plot.title = element_text(hjust = 0.5, face = "bold"),
+  legend.position = "bottom"
+)
+
+# Set the color palette of ggplot to a colorblind friendly one (Okabe-Ito)
+options(
+  ggplot2.discrete.colour = c(
+    "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#000000"
+  ), ggplot2.discrete.fill = c(
+    "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#000000"
+  )
+)
+
+# Set scientific notation output and decimal places for knitr
+# options(scipen = 999)
+# options(digits = 4)
+
+# Save the cache so you don't need to call the same API request over and over
+options(tigris_use_cache = TRUE)
+```
+
+
+```{r data_read, include = FALSE}
+# Get the bounding box and state outline
+mn.box <- osmdata::getbb("minnesota")
+mn.outline <- osmdata::getbb("minnesota", format_out = "polygon")[[1]] %>%
+  as_tibble() %>%
+  rename(longitude = V1, latitude = V2)
+
+# Get map from ggmap
+# Get the base map (foundational layer)
+mn_base.map <- get_map(
+  location = mn.box,
+  source = "google",
+  maptype = "roadmap",
+  crop = TRUE
+)
+
+# Create the base map
+mn_base.gg <- ggmap(mn_base.map) +
+  geom_polygon(data = mn.outline, aes(x = longitude, y = latitude), colour = "black", size = 1.6, alpha = 0.1) +
+  theme_map() +
+  theme(
+    plot.title = element_text(
+      size = 16,
+      hjust = 0.5
+    ),
+    legend.text = element_text(size = 16),
+    legend.title = element_text(size = 16),
+    legend.position = "right"
+  )
+```
+
+Column
+-----------------------------------------------------------------------
+  
+### Various event and entertainment venue locations in MN
+  
+```{r amenities-map-MN, echo = F}
+# Load the "amenity" key, taking only the required places
+osm_amenity_sf.df <- opq(bbox = "minnesota", timeout = 60) %>%
+  add_osm_feature(key = "amenity", value = c("cinema", "casino", "theatre", "events_venue")) %>%
+  osmdata_sf()
+
+# Extract the points
+amenity_points.df <- osm_amenity_sf.df$osm_points %>%
+  janitor::clean_names() %>%
+  filter(
+    !is.na(amenity),
+    amenity %in% c("cinema", "casino", "theatre", "events_venue")
+  ) %>% # only retain 'valid' tags
+  mutate(amenity = str_replace_all(amenity, "_", " ") %>% str_to_title() %>% as_factor()) %>%
+  st_intersection(osmdata::getbb("minnesota", format_out = "sf_polygon"), .)
+
+# Extract the levels/order of amenity type
+amenity_types <- levels(amenity_points.df$amenity)
+
+# Add a text label like normal
+amenity_label.df <- amenity_points.df %>%
+  mutate(
+    text_label = str_c(
+      name,
+      "<br/>",
+      amenity
+    ),
+    icon = case_when(
+      amenity %in% "Cinema" ~ "film",
+      amenity %in% "Theatre" ~ "ticket",
+      amenity %in% "Events Venue" ~ "calendar",
+      amenity %in% "Casino" ~ "credit-card"
+    ),
+    color = case_when(
+      amenity %in% "Theatre" ~ "red",
+      amenity %in% "Events Venue" ~ "orange",
+      amenity %in% "Cinema" ~ "lightgreen",
+      amenity %in% "Casino" ~ "purple"
+    )
+  )
+
+# Specify the specific icon for each place accordingly
+icons <- awesomeIcons(
+  icon = amenity_label.df %>% st_drop_geometry() %>% dplyr::select(icon) %>% pull(),
+  iconColor = "black",
+  library = "fa",
+  markerColor = amenity_label.df %>% st_drop_geometry() %>% dplyr::select(color) %>% pull()
+)
+
+# Create the leaflet
+leaflet(data = amenity_label.df) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addAwesomeMarkers(popup = ~ map(text_label, HTML), label = ~ map(text_label, HTML), icon = icons) %>%
+  addLegend(
+    title    = "Venue Type",
+    position = "bottomright",
+    colors   = c("red", "orange", "lightgreen", "purple"),
+    labels   = amenity_types
+  )
+```
+
+Column
+-----------------------------------------------------------------------
+  
+### Public transport use by tract in Hennepin county
+  
+```{r pub_trans_map_hennepin, echo = F}
+# Get the bounding box and county outline
+hennepin.box <- osmdata::getbb("hennepin")
+hennepin.outline <- osmdata::getbb("hennepin", format_out = "polygon")[[1]] %>%
+  as_tibble() %>%
+  rename(longitude = V1, latitude = V2)
+
+# Get map from ggmap
+# Get the base map (foundational layer)
+hennepin_base.map <- get_map(
+  location = hennepin.box,
+  source = "google",
+  maptype = "roadmap",
+  crop = TRUE
+)
+
+# Create the base map
+hennepin_base.gg <- ggmap(hennepin_base.map) +
+  geom_polygon(data = hennepin.outline, aes(x = longitude, y = latitude), colour = "black", size = 1.6, alpha = 0.1) +
+  theme_map() +
+  theme(
+    plot.title = element_text(
+      size = 16,
+      hjust = 0.5
+    ),
+    legend.text = element_text(size = 16),
+    legend.title = element_text(size = 16),
+    legend.position = "right"
+  )
+
+# Read in zipcode data
+mn_zipcode.df <- read_csv("./data/mn_zipcodes.csv",
+  show_col_types = FALSE
+) %>%
+  mutate(
+    zip_code = as.character(zip_code),
+    county   = as_factor(county)
+  ) %>%
+  bind_rows(
+    .,
+    tibble(
+      zip_code = as.character(c(55344, 55346, 55347)),
+      city     = rep("Eden Prairie", 3),
+      county   = rep("Hennepin", 3)
+    )
+  )
+
+# Call the ACS API, returns a sf object
+zipcode_pub_trans.df <- get_acs(
+  geography = "zip code tabulation area",
+  year = 2019, # somehow 2020 gives me an error, so had to do 2019
+  # Code for total population and people who use public transportation to go to work
+  variables = c("B01001_001", "B08101_025"),
+  geometry = TRUE
+) %>%
+  janitor::clean_names() %>%
+  mutate(
+    zipcode = str_remove(name, "ZCTA5 ")
+  ) %>%
+  dplyr::select(-moe) %>%
+  # Calculate the corresponding percentage for each county
+  pivot_wider(names_from = variable, values_from = estimate) %>%
+  mutate(perc_public_transport = B08101_025 / B01001_001) %>%
+  # Recast as an sf
+  st_as_sf()
+
+# Inner join will perform both operations at once
+mn_zip_city.df <- inner_join(
+  zipcode_pub_trans.df,
+  mn_zipcode.df,
+  by = c("zipcode" = "zip_code") # zipcode in first, zip_code second
+)
+
+# Add a text label to mn_income.df
+mn_pub_trans_plotly.df <- mn_zip_city.df %>%
+  mutate(
+    text_label = str_c(
+      "City: ",
+      city,
+      "\nZipcode: ",
+      zipcode,
+      "\nPercentage of population that uses Public Transport to go to Work: ",
+      scales::percent(perc_public_transport, accuracy = 0.01)
+    )
+  )
+
+# Overlay thge sf info from tidycensus ACS income estimates
+mn_pub_trans.ggmap <- hennepin_base.gg +
+  geom_sf(
+    data = mn_pub_trans_plotly.df,
+    aes(fill = perc_public_transport, text = text_label),
+    colour = "black", size = 0.1,
+    inherit.aes = FALSE
+  ) +
+  geom_path(
+    data = hennepin.outline,
+    aes(x = longitude, y = latitude),
+    colour = "black", size = 1.2, alpha = 0.6,
+    inherit.aes = FALSE
+  ) +
+  labs(title = "Percent of Population that uses Public Transport to go to 
+       Work, Hennepin County, MN 2019 ACS ") +
+  scale_fill_distiller("% use",
+    labels = scales::percent,
+    type = "seq", palette = "OrRd", direction = 1
+  ) +
+  theme_map() +
+  theme(
+    plot.title = element_text(
+      size = 16,
+      hjust = 0.5
+    ),
+    legend.text = element_text(size = 16),
+    legend.title = element_text(size = 16),
+    legend.position = "right"
+  )
+
+# Create plotly
+mn_pub_trans.ggplotly <-
+  ggplotly(mn_pub_trans.ggmap,
+    tooltip = "text",
+    height  = 600,
+    width   = 800
+  ) %>%
+  style(hoveron = "fills")
+
+# Set replacement indices and values, in this case have to skip until trace 493
+index <- c(3, 494)
+replacement <- c("skip", "skip")
+
+# For loop to replace index and info
+for (i in 1:length(index)) {
+  mn_pub_trans.ggplotly$x$data[[index[i]]]$hoverinfo <- replacement[i]
+}
+
+# Display
+mn_pub_trans.ggplotly
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Sports venues in Minnesota
+
+```{r sports-venue-mn, echo = F}
+# Load the sports venues in all of MN
+osm_sports_sf.df <- opq(bbox = "minnesota", timeout = 60) %>%
+  add_osm_feature(key = "sport") %>%
+  osmdata_sf()
+
+# Extract the polygons (gives better information than points, which could just
+# be entrances to a venue)
+sports_poly.df <- osm_sports_sf.df$osm_polygons %>%
+  janitor::clean_names() %>%
+  filter(!is.na(sport), !is.na(name)) %>% # only retain 'valid' tags
+  mutate(sport = str_replace_all(sport, "_", " ") %>%
+    str_to_title() %>% as_factor())
+
+# Calculate the centroid for each venue, in order to plot the markers
+sports_points.df <- sports_poly.df %>%
+  st_centroid() %>%
+  mutate(text_label = str_c(
+    name,
+    "</br> Sport: ",
+    sport
+  ))
+
+# Create the leaflet
+leaflet() %>%
+  addProviderTiles("Esri.NatGeoWorldMap") %>%
+  addMarkers(
+    label = ~ map(text_label, HTML), data = sports_points.df,
+    clusterOptions = markerClusterOptions(
+      showCoverageOnHover = FALSE
+    )
+  ) %>%
+  addEasyButton(easyButton(
+    icon = "fa-crosshairs", title = "Locate Me",
+    onClick = JS("function(btn, map){ map.locate({setView: true}); }")
+  )) %>%
+  addMiniMap(tiles = "Esri.NatGeoWorldMap", toggleDisplay = TRUE) %>%
+  addPolygons(data = getbb("minnesota, united states",
+    format_out = "sf_polygon"
+  ), fill = F)
+```
